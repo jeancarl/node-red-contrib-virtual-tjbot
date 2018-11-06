@@ -1,0 +1,73 @@
+<!--
+#***************************************************************************
+# Copyright 2018 IBM
+#
+#   Virtual TJBot Nodes for Node-RED
+#
+#   By JeanCarl Bisson (@dothewww)
+#   More info: https://ibm.biz/node-red-contrib-virtual-tjbot
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#***************************************************************************
+-->
+<script type="text/javascript">
+  RED.nodes.registerType("vtjbot-converse",{
+    category: "Virtual TJBot",
+    color: "#D2B48C",
+    defaults: {
+      botId: {type: "vtjbot-config"},
+      name: {value: ""}
+    },
+    inputs: 1,
+    outputs: 1,
+    paletteLabel: "assistant",
+    icon: "conversation.png",
+    align: "left",
+    label: function() {
+      return this.name||"Assistant";
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="vtjbot-converse">
+  <div class="form-row">
+    <label for="node-input-botId"><i class="fa fa-user"></i> Bot:</label>
+    <select id="node-input-botId">
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="vtjbot-converse">
+  <p>Make TJBot converse</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload
+      <span class="property-type">string</span>
+    </dt>
+    <dd>specify the text to be analyzed with Watson Assistant</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>response <span class="property-type">object</span></dt>
+    <dd>the service response from Watson Assistant</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p>Note: This node requires that the Watson Assistant credentials are set in the TJBot configuration.</p>
+</script>

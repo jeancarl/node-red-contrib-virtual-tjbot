@@ -1,0 +1,52 @@
+<!--
+#***************************************************************************
+# Copyright 2018 IBM
+#
+#   Virtual TJBot Nodes for Node-RED
+#
+#   By JeanCarl Bisson (@dothewww)
+#   More info: https://ibm.biz/node-red-contrib-virtual-tjbot
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#***************************************************************************
+-->
+<html>
+  <head>
+    <script src="socket.io/socket.io.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous"></script>
+    <script src="watson-speech.js"></script>
+    <script src="tjbot.js"></script>
+  </head>
+  <body>
+    <center>
+      <svg width="255" height="400">
+        <rect x="92" y="84" width="16" height="16" id="led" style="fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <rect y="100" width="200" height="150" style="fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <rect x="225" y="250" width="25" id="armback" height="35" style="display:none;fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />       
+        <rect x="200" y="260" width="50" height="25" style="fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <rect x="225" y="235" width="25" id="armup" height="50" style="fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <rect x="225" y="260" width="25" id="armdown" height="50" style="display:none;fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <rect y="260" width="200" height="30" style="fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <rect x="40" y="290" width="40" height="50" style="fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <rect x="120" y="290" width="40" height="50" style="fill:rgb(128,128,128);stroke-width:3;stroke:rgb(0,0,0)" />
+        <circle cX="60" cY="230" r="10" style="fill:black;stroke-width:3;stroke:rgb(0,0,0)" />
+        <circle cX="140" cY="230" r="10" style="fill:black;stroke-width:3;stroke:rgb(0,0,0)" />
+      </svg>
+    </center>
+    <div id="cameratab" style="display:none"></div>
+    <audio controls id="playAudio" style="display:none"></audio>
+  </body>
+</html>

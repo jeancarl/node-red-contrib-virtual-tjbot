@@ -1,0 +1,39 @@
+{
+  "name": "node-red-contrib-virtual-tjbot",
+  "version": "0.1.0",
+  "description": "Node-RED Nodes for a virtual TJBot",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "node-red": {
+    "nodes": {
+      "vtjbot-config": "tjbot/config.js",
+      "vtjbot-converse": "tjbot/converse.js",
+      "vtjbot-listen": "tjbot/listen.js",
+      "vtjbot-see": "tjbot/see.js",
+      "vtjbot-shine": "tjbot/shine.js",
+      "vtjbot-speak": "tjbot/speak.js",
+      "vtjbot-analyze-tone": "tjbot/tone.js",
+      "vtjbot-translate": "tjbot/translate.js",
+      "vtjbot-wave": "tjbot/wave.js"
+    }
+  },
+  "dependencies": {
+    "mime": "^2.3.1",
+    "watson-developer-cloud": "^3.4.5",
+    "path": "^0.12.7",
+    "socket.io": "^2.1.1",
+    "serve-static": "^1.13.2",
+    "body-parser": "^1.18.3"
+  },
+  "author": "JeanCarl Bisson <jbisson@us.ibm.com> (http://jeancarlbisson.com)",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeancarl/node-red-contrib-virtual-tjbot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jeancarl/node-red-contrib-virtual-tjbot/issues"
+  },
+  "homepage": "https://github.com/jeancarl/node-red-contrib-virtual-tjbot#readme"
+}

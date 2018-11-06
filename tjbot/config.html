@@ -1,0 +1,163 @@
+<!--
+#***************************************************************************
+# Copyright 2018 IBM
+#
+#   Virtual TJBot Nodes for Node-RED
+#
+#   By JeanCarl Bisson (@dothewww)
+#   More info: https://ibm.biz/node-red-contrib-virtual-tjbot
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#***************************************************************************
+-->
+<script type="text/javascript">
+  RED.nodes.registerType("vtjbot-config",{
+    category: "config",
+    defaults: {
+      botGender: {value: ""},
+      name: {value: ""},
+      listen: {value: ""},
+      speak: {value: ""},
+      hasServo: {value:false},
+      hasLED: {value:false},
+      hasSpeaker: {value:false},
+      hasMicrophone: {value:false},
+      hasCamera: {value:false}
+    },
+    credentials: {
+      taApiKey: {type:"password"},
+      aApiKey: {type:"password"},
+      aWorkspaceId: {type:"text"},
+      ltApiKey: {type:"password"},
+      ttsApiKey: {type:"password"},
+      sttApiKey: {type:"password"},
+      vrApiKey: {type:"password"}
+    },
+    label: function() {
+      return this.botName||this.name||"TJBot";
+    },
+    onpaletteadd: function() {
+      RED.sidebar.addTab({
+        id: "vtjbot",
+        label: "Virtual TJBot", // the label is displayed on the tab
+        name: "Virtual TJBot", // displayed in the view menu
+        content: '<div id="vtjbot" style="width: 100%; height: 100%"><iframe src="/tjbot" style="min-width: 260px; height: 500px; border: 0px" border="0"></iframe></div>', // content of the tab
+        //toolbar: "toolbar", // content for the footer of the tab
+        closeable: true, // can be closed
+        enableOnEdit: true,
+        iconClass: 'fa fa-android'
+      });
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="vtjbot-config">
+  <div class="form-row">
+    <label for="node-config-input-botGender"><i class="fa fa-user"></i> Gender:</label>
+    <select id="node-config-input-botGender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-speak"><i class="fa fa-language"></i> Speak:</label>
+    <select id="node-config-input-speak">
+      <option value="en-GB">English (British dialect)</option>
+      <option value="en-US">English (US dialect)</option>
+      <option value="fr-FR">French</option>
+      <option value="de-DE">German</option>
+      <option value="it-IT">Italian</option>
+      <option value="ja-JP">Japanese</option>
+      <option value="pt-BR">Brazilian Portuguese</option>
+      <option value="es-ES">Spanish (Castilian dialect)</option>
+      <option value="es-LA">Spanish (Latin American dialect)</option>
+      <option value="es-US">Spanish (North American dialect)</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-listen"><i class="fa fa-language"></i> Listen:</label>
+    <select id="node-config-input-listen">
+      <option value="ar-AR">Modern Standard Arabic</option>
+      <option value="zh-CN">Mandarin Chinese</option>
+      <option value="en-UK">UK English</option>
+      <option value="en-US">US English</option>
+      <option value="fr-FR">French</option>
+      <option value="de-DE">German</option>
+      <option value="ja-JP">Japanese</option>
+      <option value="ko-KR">Korean</option>
+      <option value="pt-BR">Brazilian Portuguese</option>
+      <option value="es-ES">Spanish</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label><i class="fa fa-toggle-on"></i> Has</label>
+    <label for="node-config-input-hasServo"><input type="checkbox" id="node-config-input-hasServo" placeholder="" style="display: inline-block; width: auto; vertical-align: top;"> Servo</label>
+    <label for="node-config-input-hasLED"><input type="checkbox" id="node-config-input-hasLED" placeholder="" style="display: inline-block; width: auto; vertical-align: top;"> LED</label>
+    <label for="node-config-input-hasCamera"><input type="checkbox" id="node-config-input-hasCamera" placeholder="" style="display: inline-block; width: auto; vertical-align: top;"> Camera</label>
+  </div>
+  <div class="form-row">
+    <label></label>
+    <label for="node-config-input-hasMicrophone"><input type="checkbox" id="node-config-input-hasMicrophone" placeholder="" style="display: inline-block; width: auto; vertical-align: top;"> Microphone</label>
+    <label for="node-config-input-hasSpeaker"><input type="checkbox" id="node-config-input-hasSpeaker" placeholder="" style="display: inline-block; width: auto; vertical-align: top;"> Speaker</label>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-config-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <b>Watson Assistant</b> <a href="https://ibm.biz/catalog-assistant" target="_blank" title="Open IBM Cloud Catalog"><i class="fa fa-external-link"></i></a>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-aApiKey"><i class="fa fa-key"></i> API Key:</label>
+    <input type="password" id="node-config-input-aApiKey" placeholder="Watson Assistant API Key">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-aWorkspaceId"><i class="fa fa-tag"></i> Workspace ID:</label>
+    <input type="text" id="node-config-input-aWorkspaceId" placeholder="Watson Assistant Workspace ID">
+  </div>
+  <div class="form-row">
+    <b>Language Translator</b>  <a href="https://ibm.biz/catalog-language-translator" target="_blank" title="Open IBM Cloud Catalog"><i class="fa fa-external-link"></i></a>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-ltApiKey"><i class="fa fa-key"></i> API Key:</label>
+    <input type="password" id="node-config-input-ltApiKey" placeholder="Language Translator API Key">
+  </div>
+  <div class="form-row">
+    <b>Speech to Text</b> <a href="https://ibm.biz/catalog-speech-to-text" target="_blank" title="Open IBM Cloud Catalog"><i class="fa fa-external-link"></i></a>
+    </div>
+    <div class="form-row">
+      <label for="node-config-input-sttApiKey"><i class="fa fa-key"></i> API Key:</label>
+      <input type="password" id="node-config-input-sttApiKey" placeholder="Speech to Text API Key">
+    </div>  
+  <div class="form-row">
+    <b>Text to Speech</b> <a href="https://ibm.biz/catalog-text-to-speech" target="_blank" title="Open IBM Cloud Catalog"><i class="fa fa-external-link"></i></a>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-ttsApiKey"><i class="fa fa-key"></i> API Key:</label>
+    <input type="password" id="node-config-input-ttsApiKey" placeholder="Text to Speech API Key">
+  </div>
+  <div class="form-row">
+    <b>Tone Analyzer</b> <a href="http://ibm.biz/catalog-tone-analyzer" target="_blank" title="Open IBM Cloud Catalog"><i class="fa fa-external-link"></i></a>
+    </div>
+    <div class="form-row">
+      <label for="node-config-input-taApiKey"><i class="fa fa-key"></i> API Key:</label>
+      <input type="password" id="node-config-input-taApiKey" placeholder="Tone Analyzer API Key">
+    </div>  
+  <div class="form-row">
+    <b>Visual Recognition</b> <a href="https://ibm.biz/catalog-visual-recognition" target="_blank" title="Open IBM Cloud Catalog"><i class="fa fa-external-link"></i></a>
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-vrApiKey"><i class="fa fa-key"></i> API Key:</label>
+    <input type="password" id="node-config-input-vrApiKey" placeholder="Visual Recognition API Key">
+  </div>
+</script>
