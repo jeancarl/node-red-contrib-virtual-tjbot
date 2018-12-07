@@ -85,15 +85,15 @@ module.exports = function(RED) {
       language: config.speak
     };
 
-    if(this.credentials.sttPassword && this.credentials.sttPassword.length) {
+    if(this.credentials.sttApiKey && this.credentials.sttApiKey.length) {
       this.services.speech_to_text = {
         apikey: this.credentials.sttApiKey,
       };
-
-      this.configuration.listen = {
-        language: config.listen
-      };
     }
+
+    this.configuration.listen = {
+      language: config.listen
+    };    
 
     if(this.credentials.vrApiKey && this.credentials.vrApiKey.length) {
       this.services.visual_recognition = {

@@ -57,7 +57,11 @@ module.exports = function(RED) {
   
     function getVoiceModel(creds, language) {
       return new Promise((resolve, reject) => {
-        resolve(language+"_BroadbandModel");
+        if(!language) {
+          reject();
+        } else {
+          resolve(language+"_BroadbandModel");
+        }
       });
     }
 
@@ -77,8 +81,9 @@ module.exports = function(RED) {
       }
     });
 
-    getVoiceModel(bot.services.speech_to_text, bot.configuration.listen.language).then(model => {
-      node.on("input", function(msg) {
+    
+    node.on("input", function(msg) {
+      getVoiceModel(bot.services.speech_to_text, bot.configuration.listen.language).then(model => {
         if(bot.hardware.indexOf("microphone") === -1) {
           return node.error("TJBot is not configured to listen. Please check you enabled the microphone in the TJBot configuration.");
         }
@@ -101,10 +106,10 @@ module.exports = function(RED) {
             node.status({fill: "red", shape: "dot", text: msg.mode == "pause" ? "paused": "stopped"});
           break;
         }
-      });  
-    }).catch(err => {
-      node.error("Unable to get Speech to Text model");
-    });
+      }).catch(err => {
+        return node.error("Unable to get Speech to Text model");
+      });
+    });  
 
     node.on("close",function() {
       function removeRoute(path) {
