@@ -273,7 +273,7 @@ $(function() {
     var stream = document.getElementById("videoElement").srcObject;
     
     if(stream) {
-      stream.stop();
+      stream.getTracks()[0];
 
       $("#videoElement").remove();
       $("#canvas").remove();
