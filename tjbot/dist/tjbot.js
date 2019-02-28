@@ -250,6 +250,7 @@ $(function() {
         
         var v = document.getElementById("videoElement");
         v.ready = false;
+        v.addEventListener('canplay', () => { resolve(); }, {once: true, capture: false});        
 
         if(navigator.mediaDevices.getUserMedia) {
           // get webcam feed if available
@@ -257,7 +258,6 @@ $(function() {
             // if found attach feed to video element
             v.srcObject = stream;
             v.play();
-            resolve();
           }).catch(e => {
             // no webcam found - do something
             reject(false);
@@ -274,12 +274,7 @@ $(function() {
     var v = document.getElementById("videoElement");
     var stream = v.srcObject;
     
-    if(v && stream) {
-      if (v.stop) {
-        console.log('stop exists!');
-        v.stop();
-      }
-      
+    if(v && stream) {     
       stream.getTracks().forEach((track) => {
         track.stop();
       });
