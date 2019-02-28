@@ -256,6 +256,7 @@ $(function() {
           navigator.mediaDevices.getUserMedia({video: true, audio: false}).then((stream) => {
             // if found attach feed to video element
             v.srcObject = stream;
+            v.play();
             resolve();
           }).catch(e => {
             // no webcam found - do something
@@ -270,9 +271,15 @@ $(function() {
   }
 
   function _destroyCamera() {
-    var stream = document.getElementById("videoElement").srcObject;
+    var v = document.getElementById("videoElement");
+    var stream = v.srcObject;
     
-    if(stream) {
+    if(v && stream) {
+      if (v.stop) {
+        console.log('stop exists!');
+        v.stop();
+      }
+      
       stream.getTracks().forEach((track) => {
         track.stop();
       });
