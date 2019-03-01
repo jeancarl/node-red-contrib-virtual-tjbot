@@ -250,13 +250,14 @@ $(function() {
         
         var v = document.getElementById("videoElement");
         v.ready = false;
+        v.addEventListener('canplay', () => { resolve(); }, {once: true, capture: false});        
 
         if(navigator.mediaDevices.getUserMedia) {
           // get webcam feed if available
           navigator.mediaDevices.getUserMedia({video: true, audio: false}).then((stream) => {
             // if found attach feed to video element
             v.srcObject = stream;
-            resolve();
+            v.play();
           }).catch(e => {
             // no webcam found - do something
             reject(false);
@@ -270,10 +271,13 @@ $(function() {
   }
 
   function _destroyCamera() {
-    var stream = document.getElementById("videoElement").srcObject;
+    var v = document.getElementById("videoElement");
+    var stream = v.srcObject;
     
-    if(stream) {
-      stream.stop();
+    if(v && stream) {     
+      stream.getTracks().forEach((track) => {
+        track.stop();
+      });
 
       $("#videoElement").remove();
       $("#canvas").remove();
