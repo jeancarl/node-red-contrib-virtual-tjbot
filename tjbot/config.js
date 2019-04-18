@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -57,7 +57,8 @@ module.exports = function(RED) {
 
     if(this.credentials.taApiKey && this.credentials.taApiKey.length) {
       this.services.tone_analyzer = {
-        apikey: this.credentials.taApiKey
+        apikey: this.credentials.taApiKey,
+        url: config.taUrl
       };
     }
 
@@ -66,18 +67,22 @@ module.exports = function(RED) {
       this.services.assistant = {
         apikey: this.credentials.aApiKey,
         workspaceId: this.credentials.aWorkspaceId,
+        url: config.aUrl
       };
     }
 
+    
     if(this.credentials.ltApiKey && this.credentials.ltApiKey.length) {
       this.services.language_translator = {
-        apikey: this.credentials.ltApiKey
+        apikey: this.credentials.ltApiKey,
+        url: config.ltUrl
       };
     }
 
     if(this.credentials.ttsApiKey && this.credentials.ttsApiKey.length) {
       this.services.text_to_speech = {
-        apikey: this.credentials.ttsApiKey
+        apikey: this.credentials.ttsApiKey,
+        url: config.ttsUrl
       };
     }
 
@@ -88,6 +93,7 @@ module.exports = function(RED) {
     if(this.credentials.sttApiKey && this.credentials.sttApiKey.length) {
       this.services.speech_to_text = {
         apikey: this.credentials.sttApiKey,
+        url: config.sttUrl
       };
     }
 
@@ -97,7 +103,8 @@ module.exports = function(RED) {
 
     if(this.credentials.vrApiKey && this.credentials.vrApiKey.length) {
       this.services.visual_recognition = {
-        apikey: this.credentials.vrApiKey
+        apikey: this.credentials.vrApiKey,
+        url: config.vrUrl
       };
     }
   }

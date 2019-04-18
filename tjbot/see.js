@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -41,8 +41,8 @@ module.exports = function(RED) {
         const fs = require("fs");
 
         const visual_recognition = new VisualRecognitionV3({
-          version_date: "2018-03-19",
-          url: VisualRecognitionV3.URL,
+          version: "2018-03-19",
+          url: bot.services.visual_recognition.url||VisualRecognitionV3.URL,
           iam_apikey: bot.services.visual_recognition.apikey
         });
 

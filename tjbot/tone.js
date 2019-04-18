@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -25,12 +25,12 @@ module.exports = function(RED) {
     
     const node = this;
     const bot = RED.nodes.getNode(config.botId);
-
     const ToneAnalyzerV3 = require("watson-developer-cloud/tone-analyzer/v3");
+
     const toneAnalyzer = new ToneAnalyzerV3({
       iam_apikey: bot.services.tone_analyzer.apikey,
-      version_date: "2017-09-21",
-      url: "https://gateway.watsonplatform.net/tone-analyzer/api/"
+      version: "2017-09-21",
+      url: bot.services.tone_analyzer.url||ToneAnalyzerV3.URL
     });
 
     node.on("input", function(msg) {

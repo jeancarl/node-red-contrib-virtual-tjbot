@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -28,12 +28,13 @@ module.exports = function(RED) {
     const node = this;
     const bot = RED.nodes.getNode(config.botId);
     const LanguageTranslatorV3 = require("watson-developer-cloud/language-translator/v3");
+    
     let availableModels = {};
 
     const languageTranslator = new LanguageTranslatorV3({
       version: "2018-05-01",
       iam_apikey: bot.services.language_translator.apikey,
-      url: LanguageTranslatorV3.URL
+      url: bot.services.language_translator.url||LanguageTranslatorV3.URL
     });
 
     function getModel(srcLang, targetLang) {
@@ -48,6 +49,10 @@ module.exports = function(RED) {
 
     languageTranslator.listModels({}, function(err, models) {
       if(err) {
+        node.on("input", function(msg) {
+          node.error(err);
+        });
+
         return node.error(err);
       } else {
         availableModels = models.models;

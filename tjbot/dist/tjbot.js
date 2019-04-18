@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -76,8 +76,10 @@ $(function() {
     ttsStream = WatsonSpeech.TextToSpeech.synthesize({
       text: msg.text,
       access_token: msg.token,
-      voice: msg.voice
+      voice: msg.voice,
+      url: msg.url
     });
+
 
     ttsStream.onended = function() {
       ttsStream = null;
@@ -116,7 +118,8 @@ $(function() {
     sttStream = WatsonSpeech.SpeechToText.recognizeMicrophone({
       access_token: msg.token,
       model: msg.model,
-      object_mode: false
+      object_mode: false,
+      url: msg.url
     });
 
     sttStream.on("data", function(data) {

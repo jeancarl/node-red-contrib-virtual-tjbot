@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -29,7 +29,6 @@ module.exports = function(RED) {
     const node = this;
     const bot = RED.nodes.getNode(config.botId);
     const watson = require("watson-developer-cloud");
-
     const MEDIA_CALLBACK = ui.getPath()+"/"+node.id+"/play/:token";
     const PLAY_CALLBACK = ui.getPath()+"/"+node.id+"/playFinished";
 
@@ -75,7 +74,7 @@ module.exports = function(RED) {
   
         const authorization = new watson.AuthorizationV1({
           iam_apikey: bot.services.text_to_speech.apikey,
-          url: watson.TextToSpeechV1.URL
+          url: bot.services.text_to_speech.url||watson.TextToSpeechV1.URL
         });
       
         authorization.getToken(function (err, token) {
@@ -91,28 +90,28 @@ module.exports = function(RED) {
   
     function getVoiceModel(creds, language, gender) {
       return new Promise((resolve, reject) => {
-        const TextToSpeechV1 = require("watson-developer-cloud/text-to-speech/v1");
-        const textToSpeech = new TextToSpeechV1(
+        const textToSpeech = new watson.TextToSpeechV1(
           {
-            iam_apikey: bot.services.text_to_speech.apikey
+            iam_apikey: bot.services.text_to_speech.apikey,
+            url: bot.services.text_to_speech.url||watson.TextToSpeechV1.URL
           }
         );
-  
+
         textToSpeech.listVoices({}, function(err, voices) {
           if(err) {
-            reject({err:err});
+            reject(err.toString());
+          } else {
+            // Default to a voice if a model isn't found.
+            var voice = "en-US_MichaelVoice";
+
+            voices.voices.forEach(function(v) {
+              if(v.language == language && v.gender == gender) {
+                voice = v.name;
+              }
+            });
+    
+            resolve(voice);
           }
-
-          // Default to a voice if a model isn't found.
-          var voice = "en-US_MichaelVoice";
-
-          voices.voices.forEach(function(v) {
-            if(v.language == language && v.gender == gender) {
-              voice = v.name;
-            }
-          });
-  
-          resolve(voice);
         });
       });
     }
@@ -129,7 +128,9 @@ module.exports = function(RED) {
           case "speak":
             getToken(bot.services.text_to_speech).then(token => {
               node.lastMsg = msg;
-              ui.emit("speak", {token: token.token, callback: PLAY_CALLBACK, text: msg.payload, voice:voice});
+
+              const url = bot.services.text_to_speech.url||watson.TextToSpeechV1.URL;
+              ui.emit("speak", {url: url, token: token.token, callback: PLAY_CALLBACK, text: msg.payload, voice:voice});
               node.status({fill: "green", shape: "dot", text: "speaking"});
             });
           break;
@@ -149,6 +150,11 @@ module.exports = function(RED) {
           break;
         }
       });  
+    }).catch(error => {
+      node.on("input", function(msg) {
+        node.error(error);
+      });
+      return node.error(error);
     });
 
     node.on("close",function() {

@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -26,13 +26,13 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, config);
 
     const node = this;
-    node.apiToken = "";
-    node.lastMsg = null; // is null when not listening
     const bot = RED.nodes.getNode(config.botId);
-    const watson = require("watson-developer-cloud");
-
+    const watson = require("watson-developer-cloud");    
     const LISTEN_CALLBACK = ui.getPath()+"/"+node.id+"/listen";
   
+    node.apiToken = "";
+    node.lastMsg = null; // is null when not listening
+
     function getToken(creds) {
       return new Promise((resolve, reject) => {
         if(node.apiToken != "") {
@@ -40,8 +40,8 @@ module.exports = function(RED) {
         }
   
         const authorization = new watson.AuthorizationV1({
-          iam_apikey: bot.services.speech_to_text.apikey,
-          url: watson.SpeechToTextV1.URL
+          iam_apikey: creds.apikey,
+          url: creds.url||watson.SpeechToTextV1.URL
         });
       
         authorization.getToken(function (err, token) {
@@ -83,6 +83,10 @@ module.exports = function(RED) {
 
     
     node.on("input", function(msg) {
+      if(!bot.configuration.listen.language) {
+        return node.error("TJBot is not configured to listen. Please check you selected the language in the TJBot configuration.");
+      }
+      
       getVoiceModel(bot.services.speech_to_text, bot.configuration.listen.language).then(model => {
         if(bot.hardware.indexOf("microphone") === -1) {
           return node.error("TJBot is not configured to listen. Please check you enabled the microphone in the TJBot configuration.");
@@ -93,7 +97,9 @@ module.exports = function(RED) {
           case "resume":
             getToken(bot.services.speech_to_text).then(token => {
               node.lastMsg = msg;
-              ui.emit("listen", {token: token.token, callback: LISTEN_CALLBACK, model:model});
+
+              const url = bot.services.speech_to_text.url||watson.SpeechToTextV1.URL;
+              ui.emit("listen", {url: url, token: token.token, callback: LISTEN_CALLBACK, model:model});
               node.status({fill: "green", shape: "dot", text: "listening"});
             }).catch(err => {
               return node.error("Unable to get Speech to Text token");

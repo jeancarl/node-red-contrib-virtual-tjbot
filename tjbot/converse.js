@@ -1,5 +1,5 @@
 /***************************************************************************
-* Copyright 2018 IBM
+* Copyright 2019 IBM
 *
 *   Virtual TJBot Nodes for Node-RED
 *
@@ -26,6 +26,7 @@ module.exports = function(RED) {
     const node = this;
     const workspaceContext = {};
     const bot = RED.nodes.getNode(config.botId);
+    const AssistantV1 = require("watson-developer-cloud/assistant/v1");
 
     node.on("input", function(msg) {
       const payload = msg.payload;
@@ -34,10 +35,10 @@ module.exports = function(RED) {
         return node.error("Payload must be a string");
       }
 
-      const AssistantV1 = require("watson-developer-cloud/assistant/v1");
       const assistant = new AssistantV1({
         iam_apikey: bot.services.assistant.apikey,
-        version: "2018-02-16"
+        version: "2018-02-16",
+        url: bot.services.assistant.url||AssistantV1.URL,
       });
 
       const workspaceId = bot.services.assistant.workspaceId;
