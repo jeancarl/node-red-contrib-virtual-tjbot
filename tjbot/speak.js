@@ -68,7 +68,7 @@ module.exports = function (RED) {
       }
     });
 
-    function getToken(creds) {
+    function getToken() {
       return new Promise((resolve, reject) => {
         if (node.apiToken != "") {
           return resolve({ token: node.apiToken });
@@ -91,7 +91,7 @@ module.exports = function (RED) {
       });
     }
 
-    function getVoices(creds) {
+    function getVoices() {
       return new Promise((resolve, reject) => {
         if (node.voices.length > 0) {
           return resolve(node.voices);
@@ -117,9 +117,9 @@ module.exports = function (RED) {
       })
     }
 
-    function getVoiceModel(creds, language, gender) {
+    function getVoiceModel(language, gender) {
       return new Promise((resolve, reject) => {
-        getVoices(creds).then(voices => {
+        getVoices().then(voices => {
           var voice = "en-US_MichaelVoice";
 
           voices.forEach(v => {
@@ -147,8 +147,8 @@ module.exports = function (RED) {
             return node.error("TJBot is not configured to speak. Please check you included credentials for the Watson Text to Speech service in the TJBot configuration.");
           }
 
-          getVoiceModel(bot.services.text_to_speech, bot.configuration.speak.language, bot.configuration.robot.gender).then(voice => {
-            getToken(bot.services.text_to_speech).then(token => {
+          getVoiceModel(bot.configuration.speak.language, bot.configuration.robot.gender).then(voice => {
+            getToken().then(token => {
               node.lastMsg = msg;
 
               const url = bot.services.text_to_speech.url || TextToSpeechV1.URL;

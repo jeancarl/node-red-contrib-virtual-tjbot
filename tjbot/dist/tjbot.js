@@ -16,7 +16,7 @@
 *   distributed under the License is distributed on an "AS IS" BASIS,
 *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 *   See the License for the specific language governing permissions and
-s****************************************************************************/
+****************************************************************************/
 
 $(function () {
   const socket = io({ path: "/tjbot/socket.io" });
@@ -28,7 +28,7 @@ $(function () {
   });
 
   socket.on("error", function (err) {
-    s
+    console.log("error", err);
   })
 
   socket.on("config", function (config) {
