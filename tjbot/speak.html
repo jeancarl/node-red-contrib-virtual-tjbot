@@ -21,22 +21,22 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-speak",{
+  RED.nodes.registerType("vtjbot-speak", {
     category: "Virtual TJBot",
     color: "#D2B48C",
     defaults: {
-      botId: {type: "vtjbot-config"},
-      mode: {value: ""},
-      payload: {type: ""},
-      name: {value: ""}
+      botId: { type: "vtjbot-config" },
+      mode: { value: "" },
+      payload: { type: "" },
+      name: { value: "" }
     },
     inputs: 1,
     outputs: 1,
     paletteLabel: "speak",
     icon: "text_to_speech.png",
     align: "left",
-    label: function() {
-      return this.name||"Speak";
+    label: function () {
+      return this.name || "Speak";
     }
   });
 </script>

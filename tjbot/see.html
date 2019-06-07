@@ -21,23 +21,23 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-see",{
+  RED.nodes.registerType("vtjbot-see", {
     category: "Virtual TJBot",
     color: "#D2B48C",
     defaults: {
-      botId: {type: "vtjbot-config"},
-      mode: {value: ""},
-      returnOnPayload: {value: false},
-      width: {value: 960},
-      height: {value: 720},
-      name: {value: ""}
+      botId: { type: "vtjbot-config" },
+      mode: { value: "" },
+      returnOnPayload: { value: false },
+      width: { value: 960 },
+      height: { value: 720 },
+      name: { value: "" }
     },
     inputs: 1,
     outputs: 1,
-    oneditprepare: function() {
+    oneditprepare: function () {
       $(".takeOption").hide();
-      $('#node-input-mode').on("change", function() {
-        if($('#node-input-mode').val() == "takephoto") {
+      $('#node-input-mode').on("change", function () {
+        if ($('#node-input-mode').val() == "takephoto") {
           $(".takeOption").show();
         } else {
           $(".takeOption").hide();
@@ -47,8 +47,8 @@
     paletteLabel: "see",
     icon: "visual_recognition.png",
     align: "left",
-    label: function() {
-      return this.name||"See";
+    label: function () {
+      return this.name || "See";
     }
   });
 </script>

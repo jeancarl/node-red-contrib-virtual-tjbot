@@ -21,38 +21,38 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-config",{
+  RED.nodes.registerType("vtjbot-config", {
     category: "config",
     defaults: {
-      botGender: {value: ""},
-      name: {value: ""},
-      listen: {value: ""},
-      speak: {value: ""},
-      hasServo: {value:false},
-      hasLED: {value:false},
-      hasSpeaker: {value:false},
-      hasMicrophone: {value:false},
-      hasCamera: {value:false},
-      aUrl: {value: "https://gateway.watsonplatform.net/assistant/api"},
-      taUrl: {value: "https://gateway.watsonplatform.net/tone-analyzer/api"},
-      ltUrl: {value: "https://gateway.watsonplatform.net/language-translator/api"},
-      sttUrl: {value: "https://stream.watsonplatform.net/speech-to-text/api"},
-      ttsUrl: {value: "https://stream.watsonplatform.net/text-to-speech/api"},
-      vrUrl: {value: "https://gateway.watsonplatform.net/visual-recognition/api"}
+      botGender: { value: "" },
+      name: { value: "" },
+      listen: { value: "" },
+      speak: { value: "" },
+      hasServo: { value: false },
+      hasLED: { value: false },
+      hasSpeaker: { value: false },
+      hasMicrophone: { value: false },
+      hasCamera: { value: false },
+      aUrl: { value: "https://gateway.watsonplatform.net/assistant/api" },
+      taUrl: { value: "https://gateway.watsonplatform.net/tone-analyzer/api" },
+      ltUrl: { value: "https://gateway.watsonplatform.net/language-translator/api" },
+      sttUrl: { value: "https://stream.watsonplatform.net/speech-to-text/api" },
+      ttsUrl: { value: "https://stream.watsonplatform.net/text-to-speech/api" },
+      vrUrl: { value: "https://gateway.watsonplatform.net/visual-recognition/api" }
     },
     credentials: {
-      taApiKey: {type:"password"},
-      aApiKey: {type:"password"},
-      aWorkspaceId: {type:"text"},
-      ltApiKey: {type:"password"},
-      ttsApiKey: {type:"password"},
-      sttApiKey: {type:"password"},
-      vrApiKey: {type:"password"}
+      taApiKey: { type: "password" },
+      aApiKey: { type: "password" },
+      aWorkspaceId: { type: "text" },
+      ltApiKey: { type: "password" },
+      ttsApiKey: { type: "password" },
+      sttApiKey: { type: "password" },
+      vrApiKey: { type: "password" }
     },
-    label: function() {
-      return this.botName||this.name||"TJBot";
+    label: function () {
+      return this.botName || this.name || "TJBot";
     },
-    onpaletteadd: function() {
+    onpaletteadd: function () {
       RED.sidebar.addTab({
         id: "vtjbot",
         label: "Virtual TJBot", // the label is displayed on the tab

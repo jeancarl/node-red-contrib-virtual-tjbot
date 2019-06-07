@@ -22,8 +22,8 @@
 var inited = false;
 var tjbotPath;
 
-module.exports = function(RED) {
-  if(!inited) {
+module.exports = function (RED) {
+  if (!inited) {
     inited = true;
     init(RED.server, RED.httpNode || RED.httpAdmin, RED.log, RED.settings);
   }
@@ -40,13 +40,13 @@ const socketio = require("socket.io");
 const serveStatic = require("serve-static");
 var settings = {};
 var io;
-var state = {led: {color: "off"}, arm: {position: "raiseArm"}};
+var state = { led: { color: "off" }, arm: { position: "raiseArm" } };
 
 //from: https://stackoverflow.com/a/28592528/3016654
 function join() {
-  const trimRegex = new RegExp("^\\/|\\/$","g"),
-  paths = Array.prototype.slice.call(arguments);
-  return "/"+paths.map(function(e) {return e.replace(trimRegex,"");}).filter(function(e) {return e;}).join("/");
+  const trimRegex = new RegExp("^\\/|\\/$", "g"),
+    paths = Array.prototype.slice.call(arguments);
+  return "/" + paths.map(function (e) { return e.replace(trimRegex, ""); }).filter(function (e) { return e; }).join("/");
 }
 
 function init(server, app, log, redSettings) {
@@ -54,10 +54,10 @@ function init(server, app, log, redSettings) {
   const socketIoPath = join(tjbotPath, "socket.io");
   const bodyParser = require("body-parser");
 
-  app.use(bodyParser.json({limit: "50mb"}));
+  app.use(bodyParser.json({ limit: "50mb" }));
   app.use(tjbotPath, serveStatic(path.join(__dirname, "dist")));
 
-  io = socketio(server, {path: socketIoPath});
+  io = socketio(server, { path: socketIoPath });
 
   io.on("connection", socket => {
     socket.emit("config", state);
@@ -67,19 +67,19 @@ function init(server, app, log, redSettings) {
 function emit(command, params) {
   io.emit(command, params);
 
-  switch(command) {
+  switch (command) {
     case "shine":
       state.led.color = params.color;
-    break;
+      break;
     case "pulse":
       state.led.color = "off";
-    break;
+      break;
     case "armBack":
     case "lowerArm":
     case "raiseArm":
     case "wave":
       state.arm.position = command;
-    break;
+      break;
   }
 }
 

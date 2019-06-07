@@ -19,48 +19,52 @@
 *   limitations under the License.
 ****************************************************************************/
 
-module.exports = function(RED) {
+module.exports = function (RED) {
   function vtjbotNodeConverse(config) {
     RED.nodes.createNode(this, config);
 
     const node = this;
     const workspaceContext = {};
     const bot = RED.nodes.getNode(config.botId);
-    const AssistantV1 = require("watson-developer-cloud/assistant/v1");
+    const AssistantV1 = require("ibm-watson/assistant/v1");
 
-    node.on("input", function(msg) {
+    node.on("input", function (msg) {
+      if (!bot || !bot.services.assistant || !bot.services.assistant.apikey || !bot.services.assistant.apikey.length || !bot.services.assistant.workspaceId || !bot.services.assistant.workspaceId.length) {
+        return node.error("TJBot is not configured to converse. Please check you included credentials for the Watson Assistant service in the TJBot configuration.");
+      }
+
       const payload = msg.payload;
 
-      if(typeof payload !== "string") {
+      if (typeof payload !== "string") {
         return node.error("Payload must be a string");
       }
 
       const assistant = new AssistantV1({
         iam_apikey: bot.services.assistant.apikey,
         version: "2018-02-16",
-        url: bot.services.assistant.url||AssistantV1.URL,
+        url: bot.services.assistant.url || AssistantV1.URL,
       });
 
       const workspaceId = bot.services.assistant.workspaceId;
 
       assistant.message({
         workspace_id: workspaceId,
-        input: {"text": payload},
-        context: msg.context||workspaceContext[workspaceId]||{}
-      }, function(err, response) {
-        if(err) {
-          return node.error(err);
-        }
+        input: { "text": payload },
+        context: msg.context || workspaceContext[workspaceId] || {}
+      })
+        .then(response => {
+          msg.response = {
+            "object": response,
+            "description": response.output.text.length > 0 ? response.output.text[0] : ""
+          };
 
-        msg.response = {
-          "object": response,
-          "description": response.output.text.length > 0 ? response.output.text[0] : ""
-        };
+          workspaceContext[workspaceId] = response.context;
 
-        workspaceContext[workspaceId] = response.context;
-
-        node.send(msg);
-      });
+          node.send(msg);
+        })
+        .catch(error => {
+          return node.error(error);
+        });
     });
   }
 

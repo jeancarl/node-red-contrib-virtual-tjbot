@@ -21,32 +21,32 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-translate",{
+  RED.nodes.registerType("vtjbot-translate", {
     category: "Virtual TJBot",
     color: "#D2B48C",
     defaults: {
-      botId: {type: "vtjbot-config"},
-      srcLang: {value: ""},
-      targetLang: {value: ""},
-      mode: {value: "translate"},
-      name: {value: ""}
+      botId: { type: "vtjbot-config" },
+      srcLang: { value: "" },
+      targetLang: { value: "" },
+      mode: { value: "translate" },
+      name: { value: "" }
     },
     inputs: 1,
     outputs: 1,
-    oneditprepare: function() {
-      $("#node-input-mode").on("change", function() {
-        if($('#node-input-mode').val() == "identifyLanguage") {
+    oneditprepare: function () {
+      $("#node-input-mode").on("change", function () {
+        if ($('#node-input-mode').val() == "identifyLanguage") {
           $("#srcLang, #targetLang").hide();
         } else {
           $("#srcLang, #targetLang").show();
         }
       });
-    },    
+    },
     paletteLabel: "translate",
     icon: "translate.png",
     align: "left",
-    label: function() {
-      return this.name||"Translate";
+    label: function () {
+      return this.name || "Translate";
     }
   });
 </script>

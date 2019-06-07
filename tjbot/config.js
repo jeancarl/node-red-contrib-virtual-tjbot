@@ -19,7 +19,7 @@
 *   limitations under the License.
 ****************************************************************************/
 
-module.exports = function(RED) {
+module.exports = function (RED) {
   function vTJBotNodeConfig(config) {
     RED.nodes.createNode(this, config);
     this.botGender = config.botGender;
@@ -35,34 +35,34 @@ module.exports = function(RED) {
       }
     };
 
-    if(config.hasServo) {
+    if (config.hasServo) {
       this.hardware.push("servo");
     }
 
-    if(config.hasLED) {
+    if (config.hasLED) {
       this.hardware.push("led");
     }
 
-    if(config.hasSpeaker) {
+    if (config.hasSpeaker) {
       this.hardware.push("speaker");
     }
 
-    if(config.hasMicrophone) {
+    if (config.hasMicrophone) {
       this.hardware.push("microphone");
     }
 
-    if(config.hasCamera) {
+    if (config.hasCamera) {
       this.hardware.push("camera");
     }
 
-    if(this.credentials.taApiKey && this.credentials.taApiKey.length) {
+    if (this.credentials.taApiKey && this.credentials.taApiKey.length) {
       this.services.tone_analyzer = {
         apikey: this.credentials.taApiKey,
         url: config.taUrl
       };
     }
 
-    if(this.credentials.aApiKey && this.credentials.aApiKey.length &&
+    if (this.credentials.aApiKey && this.credentials.aApiKey.length &&
       this.credentials.aWorkspaceId && this.credentials.aWorkspaceId.length) {
       this.services.assistant = {
         apikey: this.credentials.aApiKey,
@@ -71,15 +71,15 @@ module.exports = function(RED) {
       };
     }
 
-    
-    if(this.credentials.ltApiKey && this.credentials.ltApiKey.length) {
+
+    if (this.credentials.ltApiKey && this.credentials.ltApiKey.length) {
       this.services.language_translator = {
         apikey: this.credentials.ltApiKey,
         url: config.ltUrl
       };
     }
 
-    if(this.credentials.ttsApiKey && this.credentials.ttsApiKey.length) {
+    if (this.credentials.ttsApiKey && this.credentials.ttsApiKey.length) {
       this.services.text_to_speech = {
         apikey: this.credentials.ttsApiKey,
         url: config.ttsUrl
@@ -90,7 +90,7 @@ module.exports = function(RED) {
       language: config.speak
     };
 
-    if(this.credentials.sttApiKey && this.credentials.sttApiKey.length) {
+    if (this.credentials.sttApiKey && this.credentials.sttApiKey.length) {
       this.services.speech_to_text = {
         apikey: this.credentials.sttApiKey,
         url: config.sttUrl
@@ -99,9 +99,9 @@ module.exports = function(RED) {
 
     this.configuration.listen = {
       language: config.listen
-    };    
+    };
 
-    if(this.credentials.vrApiKey && this.credentials.vrApiKey.length) {
+    if (this.credentials.vrApiKey && this.credentials.vrApiKey.length) {
       this.services.visual_recognition = {
         apikey: this.credentials.vrApiKey,
         url: config.vrUrl
@@ -109,13 +109,15 @@ module.exports = function(RED) {
     }
   }
 
-  RED.nodes.registerType("vtjbot-config", vTJBotNodeConfig, {credentials: {
-    taApiKey: {type:"password"},
-    aApiKey: {type:"password"},
-    aWorkspaceId: {type:"text"},
-    ltApiKey: {type:"password"},
-    ttsApiKey: {type:"password"},
-    sttApiKey: {type:"password"},
-    vrApiKey: {type:"password"}
-  }});
+  RED.nodes.registerType("vtjbot-config", vTJBotNodeConfig, {
+    credentials: {
+      taApiKey: { type: "password" },
+      aApiKey: { type: "password" },
+      aWorkspaceId: { type: "text" },
+      ltApiKey: { type: "password" },
+      ttsApiKey: { type: "password" },
+      sttApiKey: { type: "password" },
+      vrApiKey: { type: "password" }
+    }
+  });
 }

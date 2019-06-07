@@ -19,35 +19,35 @@
 *   limitations under the License.
 ****************************************************************************/
 
-module.exports = function(RED) {
+module.exports = function (RED) {
   const ui = require("./ui.js")(RED);
 
   function vTJBotNodeWave(config) {
     RED.nodes.createNode(this, config);
-    
+
     const node = this;
     const bot = RED.nodes.getNode(config.botId);
 
-    node.on("input", function(msg) {
-      if(bot.hardware.indexOf("servo") === -1) {
+    node.on("input", function (msg) {
+      if (!bot || bot.hardware.indexOf("servo") === -1) {
         return node.error("TJBot is not configured with an servo. Please check you enabled the servo in the TJBot configuration.");
       }
 
-      const motion = msg.motion||config.motion;
+      const motion = msg.motion || config.motion;
 
-      switch(motion.toLowerCase()) {
+      switch (motion.toLowerCase()) {
         case "armback":
           ui.emit("armBack", {});
-        break;
+          break;
         case "lowerarm":
           ui.emit("lowerArm", {});
-        break;
+          break;
         case "raisearm":
           ui.emit("raiseArm", {});
-        break;
+          break;
         case "wave":
           ui.emit("wave", {});
-        break;
+          break;
       }
     });
   }

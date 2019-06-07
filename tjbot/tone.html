@@ -21,20 +21,20 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-analyze-tone",{
+  RED.nodes.registerType("vtjbot-analyze-tone", {
     category: "Virtual TJBot",
     color: "#D2B48C",
     defaults: {
-      botId: {type: "vtjbot-config"},
-      name: {value: ""}
+      botId: { type: "vtjbot-config" },
+      name: { value: "" }
     },
     inputs: 1,
     outputs: 1,
     paletteLabel: "analyze tone",
     icon: "tone_analyzer.png",
     align: "left",
-    label: function() {
-      return this.name||"Analyze Tone";
+    label: function () {
+      return this.name || "Analyze Tone";
     }
   });
 </script>

@@ -21,20 +21,20 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-shine",{
+  RED.nodes.registerType("vtjbot-shine", {
     category: "Virtual TJBot",
     color: "#D2B48C",
     defaults: {
-      botId: {type: "vtjbot-config"},
-      mode: {value:""},
-      color: {value: ""},
-      duration: {value: ""},
-      name: {value: ""}
+      botId: { type: "vtjbot-config" },
+      mode: { value: "" },
+      color: { value: "" },
+      duration: { value: "" },
+      name: { value: "" }
     },
     inputs: 1,
-    oneditprepare: function() {
-      $('#node-input-mode').on("change", function() {
-        if($('#node-input-mode').val() == "pulse") {
+    oneditprepare: function () {
+      $('#node-input-mode').on("change", function () {
+        if ($('#node-input-mode').val() == "pulse") {
           $("#duration").show();
         } else {
           $("#duration").hide();
@@ -44,8 +44,8 @@
     paletteLabel: "shine",
     icon: "light.png",
     align: "right",
-    label: function() {
-      return this.name||"Color: "+this.color;
+    label: function () {
+      return this.name || "Color: " + this.color;
     }
   });
 </script>

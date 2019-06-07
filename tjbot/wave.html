@@ -21,20 +21,20 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-wave",{
+  RED.nodes.registerType("vtjbot-wave", {
     category: "Virtual TJBot",
     color: "#D2B48C",
     defaults: {
-      botId: {type: "vtjbot-config"},
-      motion: {value:"wave"},
-      name: {value: ""}
+      botId: { type: "vtjbot-config" },
+      motion: { value: "wave" },
+      name: { value: "" }
     },
     inputs: 1,
     paletteLabel: "wave",
     icon: "bridge.png",
     align: "right",
-    label: function() {
-      return this.name||"Wave";
+    label: function () {
+      return this.name || "Wave";
     }
   });
 </script>

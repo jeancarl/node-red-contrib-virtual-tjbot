@@ -21,20 +21,20 @@
 #***************************************************************************
 -->
 <script type="text/javascript">
-  RED.nodes.registerType("vtjbot-converse",{
+  RED.nodes.registerType("vtjbot-converse", {
     category: "Virtual TJBot",
     color: "#D2B48C",
     defaults: {
-      botId: {type: "vtjbot-config"},
-      name: {value: ""}
+      botId: { type: "vtjbot-config" },
+      name: { value: "" }
     },
     inputs: 1,
     outputs: 1,
     paletteLabel: "assistant",
     icon: "conversation.png",
     align: "left",
-    label: function() {
-      return this.name||"Assistant";
+    label: function () {
+      return this.name || "Assistant";
     }
   });
 </script>

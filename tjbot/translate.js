@@ -19,91 +19,122 @@
 *   limitations under the License.
 ****************************************************************************/
 
-module.exports = function(RED) {
+module.exports = function (RED) {
   const ui = require("./ui.js")(RED);
 
   function vtjbotNodeTranslate(config) {
     RED.nodes.createNode(this, config);
-    
+
     const node = this;
     const bot = RED.nodes.getNode(config.botId);
-    const LanguageTranslatorV3 = require("watson-developer-cloud/language-translator/v3");
-    
-    let availableModels = {};
+    const LanguageTranslatorV3 = require("ibm-watson/language-translator/v3");
+
+    node.availableModels = [];
+
+    if (!bot || !bot.services.language_translator || !bot.services.language_translator.apikey || !bot.services.language_translator.apikey.length) {
+      node.on("input", msg => {
+        return node.error("TJBot is not configured to analyze tone. Please check you included credentials for the Watson Language Translator service in the TJBot configuration.");
+      });
+      return;
+    }
 
     const languageTranslator = new LanguageTranslatorV3({
       version: "2018-05-01",
       iam_apikey: bot.services.language_translator.apikey,
-      url: bot.services.language_translator.url||LanguageTranslatorV3.URL
+      url: bot.services.language_translator.url || LanguageTranslatorV3.URL
     });
 
-    function getModel(srcLang, targetLang) {
-      for(var i=0; i<availableModels.length; i++) {
-        if(availableModels[i].source == srcLang && availableModels[i].target == targetLang) {
-          return availableModels[i];
+    function getModels() {
+      return new Promise((resolve, reject) => {
+        if (node.availableModels.length > 0) {
+          resolve(node.availableModels);
+        } else {
+          languageTranslator.listModels({})
+            .then(models => {
+              node.availableModels = models.models;
+              resolve(node.availableModels);
+            })
+            .catch(error => {
+              reject(error);
+            })
         }
-      }
-
-      return null;
+      })
     }
 
-    languageTranslator.listModels({}, function(err, models) {
-      if(err) {
-        node.on("input", function(msg) {
-          node.error(err);
-        });
+    function getModel(srcLang, targetLang) {
+      return new Promise((resolve, reject) => {
+        getModels()
+          .then(models => {
+            for (var i = 0; i < models.length; i++) {
+              if (models[i].source == srcLang && models[i].target == targetLang) {
+                return resolve(models[i]);
+              }
+            }
 
-        return node.error(err);
-      } else {
-        availableModels = models.models;
-    
-        node.on("input", function(msg) {
-          const mode = msg.mode||config.mode;
-          
-          switch(mode.toLowerCase()) {
-            case "identifylanguage":
-              languageTranslator.identify({
-                text: msg.payload
-              }, function(err, identifiedLanguages) {
-                if(err) {
-                  node.error(err);
-                } else {
-                  msg.response = identifiedLanguages;
-                  node.send(msg);
-                }
-              });
-            break;
-            case "istranslatable":
-              var srcLang = msg.srcLang||config.srcLang;
-              var targetLang = msg.targetLang||config.targetLang;
-              var model = getModel(srcLang, targetLang);
+            return resolve(null);
+          })
+          .catch(error => {
+            reject(error);
+          })
+      })
+    }
 
+    node.on("input", function (msg) {
+      const mode = msg.mode || config.mode;
+
+      switch (mode.toLowerCase()) {
+        case "identifylanguage":
+          languageTranslator.identify({
+            text: msg.payload
+          })
+            .then(identifiedLanguages => {
+              msg.response = identifiedLanguages;
+              node.send(msg);
+            })
+            .catch(error => {
+              node.error(error);
+            });
+          break;
+        case "istranslatable":
+          var srcLang = msg.srcLang || config.srcLang;
+          var targetLang = msg.targetLang || config.targetLang;
+
+          getModel(srcLang, targetLang)
+            .then(model => {
               msg.response = model != null;
               node.send(msg);
-            break;
-            case "translate":
-              var srcLang = msg.srcLang||config.srcLang;
-              var targetLang = msg.targetLang||config.targetLang;
-              var model = getModel(srcLang, targetLang);
-
-              if(model) {
+            })
+            .catch(error => {
+              return node.error(error);
+            });
+          break;
+        case "translate":
+          var srcLang = msg.srcLang || config.srcLang;
+          var targetLang = msg.targetLang || config.targetLang;
+          getModel(srcLang, targetLang)
+            .then(model => {
+              if (model) {
                 languageTranslator.translate({
-                    text: msg.payload,
-                    model_id: model.model_id
-                  }, function(err, translation) {
-                    if (err) {
-                      node.error(err);
-                    } else {
-                      msg.response = translation;
-                      node.send(msg);
-                    }
-                });
+                  text: msg.payload,
+                  model_id: model.model_id
+                })
+                  .then(translation => {
+                    msg.response = translation;
+                    node.send(msg);
+                  })
+                  .catch(error => {
+                    return node.error(error);
+                  });
               } else {
-                node.error("no translation model exists");
+                return node.error("no translation model exists");
               }
-            break;
-          }
-        });
+            })
+            .catch(error => {
+              return node.error(error);
+            });
+          break;
+        default:
+          return node.error("No mode selected");
       }
     });
   }

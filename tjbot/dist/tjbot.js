@@ -16,50 +16,49 @@
 *   distributed under the License is distributed on an "AS IS" BASIS,
 *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 *   See the License for the specific language governing permissions and
-*   limitations under the License.
-****************************************************************************/
+s****************************************************************************/
 
-$(function() {
-  const socket = io({path:"/tjbot/socket.io"});
+$(function () {
+  const socket = io({ path: "/tjbot/socket.io" });
   var ttsStream;
   var sttStream;
 
-  socket.on("connect", function() {
+  socket.on("connect", function () {
     console.log("connected");
   });
 
-  socket.on("error", function(err) {
-    console.log("error", err);
-  })        
+  socket.on("error", function (err) {
+    s
+  })
 
-  socket.on("config", function(config) {
+  socket.on("config", function (config) {
     shine(config.led.color);
-    switch(config.arm.position) {
+    switch (config.arm.position) {
       case "armBack":
         armBack();
-      break;
+        break;
       case "lowerArm":
         lowerArm();
-      break;
+        break;
       case "raiseArm":
       case "wave":
         raiseArm();
-      break;
+        break;
     }
   });
 
-  socket.on("shine", function(data) {
+  socket.on("shine", function (data) {
     shine(data.color);
   });
 
-  socket.on("pulse", function(data) {
+  socket.on("pulse", function (data) {
     pulse(data.color, data.duration);
   });
 
   socket.on("raiseArm", raiseArm);
   socket.on("lowerArm", lowerArm);
-  socket.on("armBack", armBack);            
-  socket.on("wave", function(e) {
+  socket.on("armBack", armBack);
+  socket.on("wave", function (e) {
     raiseArm();
     setTimeout(lowerArm, 500);
     setTimeout(raiseArm, 1000);
@@ -81,14 +80,14 @@ $(function() {
     });
 
 
-    ttsStream.onended = function() {
+    ttsStream.onended = function () {
       ttsStream = null;
       $.post({
         url: msg.callback,
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({})
-      });                  
+      });
     }
   }
 
@@ -97,7 +96,7 @@ $(function() {
 
     playStream.setAttribute("src", msg.url);
     playStream.play();
-    playStream.onended = function() {
+    playStream.onended = function () {
       playStream = null;
 
       $.post({
@@ -105,13 +104,13 @@ $(function() {
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({})
-      });                  
+      });
     }
   }
 
   function listen(msg) {
     // If already listening, stop this stream before we create a new one.
-    if(sttStream) {
+    if (sttStream) {
       sttStream.stop();
     }
 
@@ -122,7 +121,7 @@ $(function() {
       url: msg.url
     });
 
-    sttStream.on("data", function(data) {
+    sttStream.on("data", function (data) {
       $.post({
         url: msg.callback,
         method: "POST",
@@ -133,31 +132,42 @@ $(function() {
       });
     });
 
-    sttStream.on("error", function(err) {
+    sttStream.on("error", function (err) {
+      $.post({
+        url: msg.callback,
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          error: err
+        })
+      });
+
+      sttStream && sttStream.stop();
+
       throw err;
     });
   }
 
   function stopListening() {
-    if(sttStream) {
+    if (sttStream) {
       sttStream.stop();
     }
   }
 
   function see(msg) {
     _setupCamera().then(() => {
-      setTimeout(function() {
+      setTimeout(function () {
         var v = document.getElementById("videoElement");
         canvas = document.getElementById("canvas");
         context = canvas.getContext("2d");
         w = canvas.width;
         h = canvas.height;
 
-        context.drawImage(v,0,0,w,h);
+        context.drawImage(v, 0, 0, w, h);
         var uri = canvas.toDataURL("image/png");
 
         _destroyCamera();
-        
+
         return $.post({
           url: msg.callback,
           method: "POST",
@@ -167,20 +177,29 @@ $(function() {
           })
         });
       }, 200); // delay to allow video element to get image
+    }).catch(error => {
+      $.post({
+        url: msg.callback,
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          error: error
+        })
+      });
     });
   }
 
   function takePhoto(msg) {
     _setupCamera().then(() => {
-      setTimeout(function() {
+      setTimeout(function () {
         var v = document.getElementById("videoElement");
         canvas = document.getElementById("canvas");
-        
-        if(msg.width == '') {
+
+        if (msg.width == '') {
           msg.width = 100;
         }
 
-        if(msg.height == '') {
+        if (msg.height == '') {
           msg.height = 75;
         }
 
@@ -189,8 +208,8 @@ $(function() {
         context = canvas.getContext("2d");
         w = canvas.width;
         h = canvas.height;
-        
-        context.drawImage(v,0,0,w,h);
+
+        context.drawImage(v, 0, 0, w, h);
 
         var uri = canvas.toDataURL("image/png");
         _destroyCamera();
@@ -204,12 +223,21 @@ $(function() {
           })
         });
       }, 200); // delay to allow video element to get image
+    }).catch(error => {
+      $.post({
+        url: msg.callback,
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          error: error
+        })
+      });
     });
   }
 
   function shine(color) {
-    if(color == "off") {
-        color = "grey";
+    if (color == "off") {
+      color = "grey";
     }
 
     $("#led").css("fill", color);
@@ -224,50 +252,50 @@ $(function() {
   function lowerArm() {
     $("#armup").hide();
     $("#armdown").show();
-    $("#armback").hide();    
+    $("#armback").hide();
   }
 
   function armBack() {
     $("#armup").hide();
     $("#armdown").hide();
-    $("#armback").show(); 
+    $("#armback").show();
   }
 
   function pulse(color, duration) {
     $("#led").css("fill", "grey");
 
-    const transition = (duration/2);
-    $("#led").css({fill: color, transition: transition+"s"});
+    const transition = (duration / 2);
+    $("#led").css({ fill: color, transition: transition + "s" });
 
     setTimeout(() => {
-        $("#led").css({fill: "grey", transition: transition+"s"});
-    }, Math.floor(transition*1000));
+      $("#led").css({ fill: "grey", transition: transition + "s" });
+    }, Math.floor(transition * 1000));
   }
 
   function _setupCamera() {
     return new Promise((resolve, reject) => {
       var v = document.getElementById("videoElement");
 
-      if(!v) {
+      if (!v) {
         $("#cameratab").append('<video autoplay id="videoElement" width="100" height="75"></video><canvas id="canvas" width="200" height="150"></canvas>');
-        
+
         var v = document.getElementById("videoElement");
         v.ready = false;
-        v.addEventListener('canplay', () => { resolve(); }, {once: true, capture: false});        
+        v.addEventListener('canplay', () => { resolve(); }, { once: true, capture: false });
 
-        if(navigator.mediaDevices.getUserMedia) {
+        if (navigator.mediaDevices.getUserMedia) {
           // get webcam feed if available
-          navigator.mediaDevices.getUserMedia({video: true, audio: false}).then((stream) => {
+          navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
             // if found attach feed to video element
             v.srcObject = stream;
             v.play();
           }).catch(e => {
             // no webcam found - do something
-            reject(false);
+            reject("No webcam found");
           });
         } else {
           alert("browser not supported");
-          reject(false);
+          reject("Browser not supported");
         }
       }
     })
@@ -276,8 +304,8 @@ $(function() {
   function _destroyCamera() {
     var v = document.getElementById("videoElement");
     var stream = v.srcObject;
-    
-    if(v && stream) {     
+
+    if (v && stream) {
       stream.getTracks().forEach((track) => {
         track.stop();
       });
