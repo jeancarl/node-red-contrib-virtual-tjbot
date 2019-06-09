@@ -32,6 +32,15 @@
     },
     inputs: 1,
     outputs: 1,
+    oneditprepare: function() {
+      $("#node-input-mode").on("change", function() {
+        if($('#node-input-mode').val() == "play") {
+          $("#payload").show();
+        } else {
+          $("#payload").hide();
+        }
+      });
+    },
     paletteLabel: "speak",
     icon: "text_to_speech.png",
     align: "left",

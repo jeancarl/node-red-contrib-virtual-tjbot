@@ -33,7 +33,7 @@ module.exports = function (RED) {
         return node.error("TJBot is not configured with an servo. Please check you enabled the servo in the TJBot configuration.");
       }
 
-      const motion = msg.motion || config.motion;
+      const motion = config.motion == "msg.motion" ? msg.motion : config.motion;
 
       switch (motion.toLowerCase()) {
         case "armback":
@@ -48,6 +48,8 @@ module.exports = function (RED) {
         case "wave":
           ui.emit("wave", {});
           break;
+        default:
+          return node.error("No mode selected");
       }
     });
   }

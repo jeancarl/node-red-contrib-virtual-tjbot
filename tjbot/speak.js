@@ -139,7 +139,7 @@ module.exports = function (RED) {
         return node.error("TJBot is not configured to speak. Please check you enabled the speaker in the TJBot configuration.");
       }
 
-      const mode = msg.mode || config.mode;
+      const mode = config.mode == "msg.mode" ? msg.mode : config.mode;
 
       switch (mode) {
         case "speak":

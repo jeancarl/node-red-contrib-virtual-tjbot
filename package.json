@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-virtual-tjbot",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Node-RED Nodes for a virtual TJBot",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

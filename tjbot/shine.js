@@ -34,9 +34,9 @@ module.exports = function (RED) {
         return node.error("TJBot is not configured with an LED. Please check you enabled the LED in the TJBot configuration.");
       }
 
-      const color = msg.color || config.color;
+      const color = config.color == "msg.color" ? msg.color : config.color;
       const duration = parseFloat(msg.duration || config.duration);
-      const mode = msg.mode || config.mode;
+      const mode = config.mode == "msg.mode" ? msg.mode : config.mode;
 
       switch (mode.toLowerCase()) {
         case "shine":
@@ -50,6 +50,8 @@ module.exports = function (RED) {
         case "pulse":
           ui.emit("pulse", { color: color, duration: duration });
           break;
+        default:
+          return node.error("No mode selected");
       }
     });
   }

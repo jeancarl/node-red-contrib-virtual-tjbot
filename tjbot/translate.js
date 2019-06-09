@@ -80,7 +80,7 @@ module.exports = function (RED) {
     }
 
     node.on("input", function (msg) {
-      const mode = msg.mode || config.mode;
+      const mode = config.mode == "msg.mode" ? msg.mode : config.mode;
 
       switch (mode.toLowerCase()) {
         case "identifylanguage":
